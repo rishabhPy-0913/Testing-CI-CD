@@ -68,7 +68,8 @@ fi
 log "Pulling latest deployment config..."
 
 if [ -d "$CONFIG_DIR/.git" ]; then
-  git -C "$CONFIG_DIR" pull --rebase origin main \
+  git -C "$CONFIG_DIR" remote set-url origin "$CONFIG_REPO"
+  git -C "$CONFIG_DIR" pull --rebase origin dev \
     || die "Failed to pull deployment config repo."
 else
   git clone "$CONFIG_REPO" "$CONFIG_DIR" \
