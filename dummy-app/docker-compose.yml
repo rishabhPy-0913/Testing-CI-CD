@@ -1,0 +1,16 @@
+services:
+  app:
+    image: ${REGISTRY}/dummy-app:latest
+    container_name: dummy-app
+    ports:
+      - "80:3000"
+    environment:
+      - APP_VERSION=${APP_VERSION:-latest}
+      - FORCE_UNHEALTHY=${FORCE_UNHEALTHY:-false}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
