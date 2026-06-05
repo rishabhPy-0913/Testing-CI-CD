@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Response
-
+import wrong_import  # This import is intentionally incorrect to demonstrate error handling
 app = FastAPI()
 
 VERSION = os.getenv("APP_VERSION", "v1.1")
