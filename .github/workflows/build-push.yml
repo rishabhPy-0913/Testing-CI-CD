@@ -55,7 +55,8 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Log — ACR login successful
-        run: echo "Logged in to ACR: ${{ env.REGISTRY }}"
+        run: |
+          echo "Logged in to ACR: ${{ env.REGISTRY }}"
 
       - name: Build Docker image
         run: |
