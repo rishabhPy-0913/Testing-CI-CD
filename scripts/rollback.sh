@@ -4,14 +4,16 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Configuration — must match values in deploy.sh
 # ---------------------------------------------------------------------------
+DEPLOY_PATH="${DEPLOY_PATH:-/home/azureuser/dev/elie-platform/ai/backend}"
+
 REGISTRY="${REGISTRY:-myregistry.azurecr.io}"
 IMAGE_NAME="${IMAGE_NAME:-test-app}"
-COMPOSE_FILE="${COMPOSE_FILE:-/opt/deployment/docker-compose.yml}"
-VERSION_FILE="${VERSION_FILE:-/opt/deployment/.previous_version}"
+COMPOSE_FILE="${COMPOSE_FILE:-$DEPLOY_PATH/docker-compose.yml}"
+VERSION_FILE="${VERSION_FILE:-$DEPLOY_PATH/.previous_version}"
 HEALTH_URL="${HEALTH_URL:-http://localhost:80/health}"
 HEALTH_RETRIES="${HEALTH_RETRIES:-10}"
 HEALTH_INTERVAL="${HEALTH_INTERVAL:-6}"
-LOG_FILE="${LOG_FILE:-/var/log/deploy.log}"
+LOG_FILE="${LOG_FILE:-$DEPLOY_PATH/deploy.log}"
 
 # ---------------------------------------------------------------------------
 # Helpers

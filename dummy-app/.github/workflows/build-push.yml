@@ -112,12 +112,13 @@ jobs:
             echo "  Deploying image: ${{ needs.build-and-push.outputs.image_tag }}"
             echo "=========================================="
 
+            export DEPLOY_PATH="/home/azureuser/dev/elie-platform/ai/backend"
             export REGISTRY="${{ secrets.ACR_LOGIN_SERVER }}"
             export IMAGE_NAME="dummy-app"
             export APP_VERSION="${{ needs.build-and-push.outputs.image_tag }}"
 
             echo "Running deploy script..."
-            bash /opt/scripts/deploy.sh
+            bash $DEPLOY_PATH/scripts/deploy.sh
 
             echo "Deploy script finished. Current containers:"
             docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
