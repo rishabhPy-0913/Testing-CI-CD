@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Response
-
+import uvicorn
 app = FastAPI()
 
 VERSION = os.getenv("APP_VERSION", "v1")
