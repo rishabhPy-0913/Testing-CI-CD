@@ -2,7 +2,7 @@ name: Build, Push & Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
 
 env:
   REGISTRY: ${{ secrets.ACR_LOGIN_SERVER }}
