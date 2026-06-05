@@ -56,8 +56,24 @@ cat ~/.ssh/deploy_key
 
 ## Step 4 — Clone the repo
 
+Store your GitHub PAT as an env variable first — never hardcode it in any file:
+
 ```bash
-git clone git@dx_hub:rishabhPy-0913/Testing-CI-CD.git ~/Testing-CI-CD
+echo 'export GITHUB_PAT_RISHABH="ghp_xxxxxxxxxxxx"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Then clone using the token from the env variable:
+
+```bash
+git clone https://$GITHUB_PAT_RISHABH@github.com/rishabhPy-0913/Testing-CI-CD.git
+```
+
+Cache credentials so future `git pull` calls inside deploy scripts work without a token:
+
+```bash
+git config --global credential.helper store
+cd Testing-CI-CD && git pull
 ```
 
 The repo already contains everything needed:
@@ -94,8 +110,7 @@ ls ~/Testing-CI-CD/scripts/
 ls ~/Testing-CI-CD/
 # docker-compose.yml  dummy-app  scripts  docs  ...
 
-ls -la /var/log/deploy.log
-# -rw-rw-rw- 1 root root 0 ...
+ls ~/Testing-CI-CD/deploy.log 2>/dev/null || echo "created on first deploy run"
 ```
 
 ---
