@@ -72,7 +72,7 @@ Add each secret exactly as named below:
 | `VM_SSH_HOST` | public IP address of your VM |
 | `VM_SSH_USER` | `azureuser` (or your VM's SSH username) |
 | `VM_SSH_KEY` | full contents of `~/.ssh/deploy_key` from the VM (the private key, including the `-----BEGIN` and `-----END` lines) |
-| `GITHUB_PAT_RISHABH` | GitHub Personal Access Token with `repo` read access |
+| `GH_PAT_RISHABH` | GitHub Personal Access Token with `repo` read access |
 
 ---
 

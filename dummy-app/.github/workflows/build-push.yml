@@ -113,7 +113,7 @@ jobs:
             echo "=========================================="
 
             export DEPLOY_PATH="/home/azureuser/dev/elie-platform/ai/backend"
-            export GITHUB_PAT_RISHABH="${{ secrets.GITHUB_PAT_RISHABH }}"
+            export GH_PAT_RISHABH="${{ secrets.GH_PAT_RISHABH }}"
             export REGISTRY="${{ secrets.ACR_LOGIN_SERVER }}"
             export IMAGE_NAME="dummy-app"
             export APP_VERSION="${{ needs.build-and-push.outputs.image_tag }}"

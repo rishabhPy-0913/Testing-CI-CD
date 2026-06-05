@@ -59,14 +59,14 @@ cat ~/.ssh/deploy_key
 Store your GitHub PAT as an env variable first — never hardcode it in any file:
 
 ```bash
-echo 'export GITHUB_PAT_RISHABH="ghp_xxxxxxxxxxxx"' >> ~/.bashrc
+echo 'export GH_PAT_RISHABH="ghp_xxxxxxxxxxxx"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
 Then clone using the token from the env variable:
 
 ```bash
-git clone https://$GITHUB_PAT_RISHABH@github.com/rishabhPy-0913/Testing-CI-CD.git
+git clone https://$GH_PAT_RISHABH@github.com/rishabhPy-0913/Testing-CI-CD.git
 ```
 
 Cache credentials so future `git pull` calls inside deploy scripts work without a token:
