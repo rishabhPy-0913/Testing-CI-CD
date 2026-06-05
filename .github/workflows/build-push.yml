@@ -120,7 +120,7 @@ jobs:
             export APP_VERSION="${{ needs.build-and-push.outputs.image_tag }}"
 
             echo "Running deploy script..."
-            bash $DEPLOY_PATH/scripts/deploy.sh
+            bash $DEPLOY_PATH/scripts/deploy.sh || exit 1
 
             echo "Deploy script finished. Current containers:"
             docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
