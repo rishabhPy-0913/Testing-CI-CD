@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, Response
+from test import wrong
 app = FastAPI()
 
 VERSION = os.getenv("APP_VERSION", "v1.1")
