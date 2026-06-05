@@ -8,6 +8,7 @@ DEPLOY_PATH="${DEPLOY_PATH:-/home/azureuser/dev/elie-platform/ai/backend/Testing
 
 REGISTRY="${REGISTRY:-myregistry.azurecr.io}"
 IMAGE_NAME="${IMAGE_NAME:-test-app}"
+APP_VERSION="${APP_VERSION:-latest}"
 COMPOSE_FILE="${COMPOSE_FILE:-$DEPLOY_PATH/docker-compose.yml}"
 CONFIG_REPO="${CONFIG_REPO:-https://${GH_PAT_RISHABH}@github.com/rishabhPy-0913/Testing-CI-CD.git}"
 CONFIG_DIR="${CONFIG_DIR:-$DEPLOY_PATH}"
@@ -31,6 +32,8 @@ die() {
 
 health_check() {
   local attempt=1
+  log "Waiting 10s for container to initialise..."
+  sleep 10
   while [ "$attempt" -le "$HEALTH_RETRIES" ]; do
     log "Health check attempt $attempt/$HEALTH_RETRIES..."
     if curl -sf --max-time 5 "$HEALTH_URL" > /dev/null 2>&1; then
@@ -45,21 +48,15 @@ health_check() {
 }
 
 # ---------------------------------------------------------------------------
-# Step 1: Record the currently running image tag as the previous version
+# Step 1: Save current stable version as previous before doing anything
 # ---------------------------------------------------------------------------
-log "=== Starting deployment ==="
+log "=== Starting deployment === (new version: $APP_VERSION)"
 
-CURRENT_TAG=$(docker inspect \
-  --format='{{index .Config.Image}}' \
-  "$(docker compose -f "$COMPOSE_FILE" ps -q app 2>/dev/null | head -1)" \
-  2>/dev/null | awk -F: '{print $NF}' || echo "")
-
-if [ -n "$CURRENT_TAG" ]; then
-  log "Current running image tag: $CURRENT_TAG"
-  echo "$CURRENT_TAG" > "$VERSION_FILE"
+if [ -f "$VERSION_FILE" ] && [ -n "$(cat "$VERSION_FILE")" ]; then
+  PREV=$(cat "$VERSION_FILE")
+  log "Previous stable version: $PREV"
 else
-  log "No previous deployment detected — fresh install."
-  echo "" > "$VERSION_FILE"
+  log "No previous stable version recorded — fresh install."
 fi
 
 # ---------------------------------------------------------------------------
@@ -101,14 +98,9 @@ if ! health_check; then
 fi
 
 # ---------------------------------------------------------------------------
-# Step 6: Tag the new version as the new "previous" stable baseline
+# Step 6: Write the new version as the stable baseline for next rollback
 # ---------------------------------------------------------------------------
-NEW_TAG=$(docker inspect \
-  --format='{{index .Config.Image}}' \
-  "$(docker compose -f "$COMPOSE_FILE" ps -q app 2>/dev/null | head -1)" \
-  2>/dev/null | awk -F: '{print $NF}' || echo "latest")
-
-log "Deployment successful. Running image tag: $NEW_TAG"
-echo "$NEW_TAG" > "$VERSION_FILE"
+log "Deployment successful. Saving version: $APP_VERSION"
+echo "$APP_VERSION" > "$VERSION_FILE"
 
 log "=== Deployment complete ==="

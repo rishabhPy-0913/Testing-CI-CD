@@ -69,11 +69,13 @@ COMPOSE_BACKUP="${COMPOSE_FILE}.rollback.bak"
 cp "$COMPOSE_FILE" "$COMPOSE_BACKUP"
 log "Compose file backed up to $COMPOSE_BACKUP"
 
-# Replace the image tag in the compose file with the previous version tag
-sed -i "s|$REGISTRY/$IMAGE_NAME:.*|$REGISTRY/$IMAGE_NAME:$PREVIOUS_TAG|g" "$COMPOSE_FILE" \
+# Replace the image tag in the compose file with the previous version tag.
+# The compose file uses ${REGISTRY} as a literal variable reference, so we
+# match on the image name only and replace just the tag portion.
+sed -i "s|\($IMAGE_NAME\):.*|\1:$PREVIOUS_TAG|g" "$COMPOSE_FILE" \
   || die "Failed to pin compose file to previous tag."
 
-log "Compose file updated to use image: $REGISTRY/$IMAGE_NAME:$PREVIOUS_TAG"
+log "Compose file updated to pin $IMAGE_NAME to tag: $PREVIOUS_TAG"
 
 # ---------------------------------------------------------------------------
 # Step 3: Pull the previous image (should already be cached, but ensure it)
