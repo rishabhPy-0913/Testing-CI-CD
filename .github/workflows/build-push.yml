@@ -134,3 +134,46 @@ jobs:
             echo "Deployment FAILED for tag: ${{ needs.build-and-push.outputs.image_tag }}"
             echo "Check VM logs: tail -50 /var/log/deploy.log"
           fi
+
+      - name: Notify Teams — success
+        if: success()
+        run: |
+          curl -s -X POST "${{ secrets.TEAMS_WEBHOOK_URL }}" \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "@type": "MessageCard",
+              "@context": "https://schema.org/extensions",
+              "themeColor": "00CC00",
+              "summary": "Deployment Succeeded",
+              "sections": [{
+                "activityTitle": "✅ Deployment Succeeded",
+                "activitySubtitle": "'"${{ github.repository }}"'",
+                "facts": [
+                  { "name": "Version", "value": "'"${{ needs.build-and-push.outputs.image_tag }}"'" },
+                  { "name": "Branch",  "value": "'"${{ github.ref_name }}"'" },
+                  { "name": "Actor",   "value": "'"${{ github.actor }}"'" }
+                ]
+              }]
+            }'
+
+      - name: Notify Teams — failure
+        if: failure()
+        run: |
+          curl -s -X POST "${{ secrets.TEAMS_WEBHOOK_URL }}" \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "@type": "MessageCard",
+              "@context": "https://schema.org/extensions",
+              "themeColor": "FF0000",
+              "summary": "Deployment Failed",
+              "sections": [{
+                "activityTitle": "❌ Deployment Failed — Rollback Triggered",
+                "activitySubtitle": "'"${{ github.repository }}"'",
+                "facts": [
+                  { "name": "Version",  "value": "'"${{ needs.build-and-push.outputs.image_tag }}"'" },
+                  { "name": "Branch",   "value": "'"${{ github.ref_name }}"'" },
+                  { "name": "Actor",    "value": "'"${{ github.actor }}"'" },
+                  { "name": "Logs",     "value": "tail -50 ~/Testing-CI-CD/deploy.log on VM" }
+                ]
+              }]
+            }'
