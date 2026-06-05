@@ -4,7 +4,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Configuration — must match values in deploy.sh
 # ---------------------------------------------------------------------------
-DEPLOY_PATH="${DEPLOY_PATH:-/home/azureuser/dev/elie-platform/ai/backend}"
+DEPLOY_PATH="${DEPLOY_PATH:-/home/azureuser/dev/elie-platform/ai/backend/Testing-CI-CD}"
 
 REGISTRY="${REGISTRY:-myregistry.azurecr.io}"
 IMAGE_NAME="${IMAGE_NAME:-test-app}"
