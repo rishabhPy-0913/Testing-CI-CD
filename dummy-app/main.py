@@ -1,9 +1,8 @@
 import os
 from fastapi import FastAPI, Response
-import uvicorn
 app = FastAPI()
 
-VERSION = os.getenv("APP_VERSION", "v1")
+VERSION = os.getenv("APP_VERSION", "v1.1")
 FORCE_UNHEALTHY = os.getenv("FORCE_UNHEALTHY", "false").lower() == "true"
 
 
